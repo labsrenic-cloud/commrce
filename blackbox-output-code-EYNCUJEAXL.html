@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <main class="container">
+        <div class="sidebar">
+            <h3>Categories</h3>
+            <ul>
+                {% for cat in categories %}
+                    <li><a href="{{ url_for('categories', category=cat.category) }}" class="{% if selected_category == cat.category %}active{% endif %}">{{ cat.category }}</a></li>
+                {% endfor %}
+            </ul>
+            <a href="{{ url_for('categories') }}">All Products</a>
+        </div>
+        <div class="main-content">
+            <h2>{% if selected_category %}{{ selected_category }}{% else %}All Products{% endif %}</h2>
+            <div class="products-grid animate-fade-in">
+                {% for product in products %}
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" class="product-image">
+                        <h3>{{ product.name }}</h3>
+                        <p class="price">${{ "%.2f"|format(product.price) }}</p>
+                        <p>{{ product.description }}</p>
+                        <form method="POST" action="{{ url_for('add_to_cart') }}" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="add-btn">Add to Cart</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+{% endblock %}
